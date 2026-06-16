@@ -1,0 +1,60 @@
+Metadata-Version: 2.4
+Name: rendezvous-backend
+Version: 0.1.0
+Summary: FastAPI backend for Rendezvous.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.115.0
+Requires-Dist: httpx>=0.27.0
+Requires-Dist: pydantic>=2.8.0
+Requires-Dist: pydantic-settings>=2.4.0
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: uvicorn[standard]>=0.30.0
+Requires-Dist: feedparser>=6.0.11
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.24.0; extra == "dev"
+
+# Rendezvous Backend
+
+FastAPI server for the Rendezvous trend analysis service.
+
+## Requirements
+
+- Python 3.11 or newer
+
+## Setup
+
+```bash
+cd server
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+cp .env.example .env
+```
+
+## Run
+
+```bash
+./scripts/dev.sh
+```
+
+The API starts at `http://127.0.0.1:8000`.
+
+## Health Check
+
+```bash
+curl http://127.0.0.1:8000/api/health
+```
+
+Expected response:
+
+```json
+{"status":"ok"}
+```
+
+## Test
+
+```bash
+.venv/bin/python -m pytest
+```
