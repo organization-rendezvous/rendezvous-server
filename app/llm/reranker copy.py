@@ -1,10 +1,14 @@
+#보관용
 from app.llm.client import get_openai_client
 import json
 
+try:
+    client = get_openai_client()
+except Exception:
+    client = None
+
 
 def rerank_trends(trends: list[dict], topic: str) -> list[dict]:
-    client = get_openai_client()  
-
     simplified = [
         {
             "title": t["title"],
@@ -46,17 +50,23 @@ def rerank_trends(trends: list[dict], topic: str) -> list[dict]:
     content = res.choices[0].message.content
 
     if not content:
-        return trends
+        return trends  # fallback
 
     if content.startswith("```json"):
         content = content.split("```json")[1].split("```")[0].strip()
+
     elif content.startswith("```"):
         content = content.split("```")[1].split("```")[0].strip()
 
     try:
-        reranked = json.loads(content)  # ← 중복 제거
+        reranked = json.loads(content)
     except json.JSONDecodeError:
         return trends
+
+    try:
+        reranked = json.loads(content)
+    except json.JSONDecodeError:
+        return trends  # fallback
 
     score_map = {r["title"]: r["rerank_score"] for r in reranked}
 

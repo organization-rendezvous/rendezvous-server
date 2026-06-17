@@ -1,12 +1,19 @@
+#보관용
 from app.llm.client import get_openai_client
 import json
 import re
+
+try:
+    client = get_openai_client()
+except Exception:
+    client = None
 
 
 def _safe_json_parse(text: str) -> dict:
     try:
         return json.loads(text)
     except Exception:
+        # JSON block만 추출 시도
         match = re.search(r"\{.*\}", text, re.DOTALL)
         if match:
             try:
@@ -23,7 +30,6 @@ def _safe_json_parse(text: str) -> dict:
 
 
 def generate_trend_summaries_batch(trends: list[dict], topic: str) -> list[dict]:
-    client = get_openai_client()  # ← 함수 호출 시점에 생성
     results = []
 
     for trend in trends:
@@ -35,26 +41,33 @@ def generate_trend_summaries_batch(trends: list[dict], topic: str) -> list[dict]
         )
 
         prompt = f"""
-너는 트렌드 분석 엔진이다.
-반드시 한국어로 작성해라.
+            너는 트렌드 분석 엔진이다.
+            반드시 한국어로 작성해라.
 
-토픽: {topic}
-트렌드: {trend.get("title", "")}
+            토픽: {topic}
+            트렌드: {trend.get("title", "")}
 
-문서:
-{context}
+            문서:
+            {context}
 
-반드시 아래 JSON 형식만 출력해라. 모든 텍스트 값은 한국어로 작성해라:
+            반드시 아래 JSON 형식만 출력해라. 모든 텍스트 값은 한국어로 작성해라:
 
-{{
-  "one_line_summary": "",
-  "detail_summary": "",
-  "importance_reason": "",
-  "keywords": []
-}}
-"""
+            {{
+            "one_line_summary": "",
+            "detail_summary": "",
+            "importance_reason": "",
+            "keywords": []
+            }}
+        """
 
         if client is None:
+            # no client configured (test environment) → no-op summary
+            parsed = {
+                "one_line_summary": "",
+                "detail_summary": "",
+                "importance_reason": "",
+                "keywords": []
+            }
             results.append({
                 **trend,
                 "llm_summary": "",

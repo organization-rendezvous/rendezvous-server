@@ -303,33 +303,26 @@ def enrich_llm_output_node(state: TrendAnalysisState) -> TrendAnalysisState:
     """
     repository.update_analysis_topic_status(
         state.get("topic_id"),
-        TopicStatus.SAVING, 
+        TopicStatus.SAVING,
         "enrich_llm_output"
     )
 
     enriched = []
 
-    for trend in state.get("scored_trends", []):
-        llm = trend.get("llm_summary", "")
-        llm_detail = trend.get("llm_detail_summary", "")
-        llm_reason = trend.get("llm_importance_reason", "")
-
-        keywords = trend.get("keywords") or []
-
+    for trend in state.get("summarized_trends", []):
         enriched.append({
-            "title": trend.title,
-            "documents": trend.documents,
-            "scores": trend.scores,
-            "embedding": trend.embedding,
-            "summary": llm,
-            "detail_summary": llm_detail,
-            "ai_comment": llm_reason,
-            "keywords": keywords,
+            "title": trend.get("title", ""),
+            "documents": trend.get("documents", []),
+            "scores": trend.get("scores"),
+            "embedding": trend.get("embedding"),
+            "summary": trend.get("llm_summary", ""),
+            "detail_summary": trend.get("llm_detail_summary", ""),
+            "ai_comment": trend.get("llm_importance_reason", ""),
+            "keywords": trend.get("keywords") or [],
         })
 
     state["final_trends"] = enriched
     state["next_action"] = "select_representative_links"
-
     return state
 
 

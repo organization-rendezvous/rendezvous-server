@@ -3,6 +3,7 @@ from collections import Counter
 
 from app.analyzers.embedding_cluster import cluster_by_embedding
 from app.models.document import TrendDocument, TrendCandidate
+from app.embeddings.client import embed_texts
 
 
 def generate_candidates(cleaned_documents: list[dict]) -> list[TrendCandidate]:
@@ -14,7 +15,6 @@ def generate_candidates(cleaned_documents: list[dict]) -> list[TrendCandidate]:
     ]
 
     if any(doc["embedding"] is None for doc in documents):
-        from app.embeddings.client import embed_texts
 
         texts = [
             " ".join([

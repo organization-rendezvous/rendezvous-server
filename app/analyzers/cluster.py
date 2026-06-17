@@ -1,3 +1,4 @@
+#클러스터 (몇게로 묶을지)를 정하지 않아도 되어서 KMeans을 사용하지 않음
 from typing import List, Dict
 from app.embeddings.similarity import cosine_similarity
 
@@ -23,7 +24,6 @@ def cluster_candidates(
                 cluster["items"].append(candidate)
                 cluster["embeddings"].append(emb)
 
-                # centroid update (simple avg)
                 cluster["centroid"] = _mean_vector(cluster["embeddings"])
                 matched = True
                 break

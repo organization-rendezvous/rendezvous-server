@@ -1,31 +1,22 @@
-from openai import OpenAI
-import os
+from app.llm.client import get_openai_client
 from typing import cast
 from app.embeddings.cache import embedding_cache
 
-
-def _get_openai_client():
-    try:
-        return OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    except Exception:
-        return None
-
-client = _get_openai_client()
+_client = get_openai_client()  # 모듈 로드 시점 1회 생성 
 
 
 def embed_batch(texts: list[str]) -> list[list[float]]:
     cached, missing_idx = embedding_cache.get_many(texts)
 
     if not missing_idx:
-        # type: ignore - narrow to concrete type after runtime check
         return cast(list[list[float]], cached)
+
+    if _client is None:
+        raise RuntimeError("OpenAI client is unavailable: make sure OPENAI_API_KEY is set")
 
     to_embed = [texts[i] for i in missing_idx]
 
-    if client is None:
-        raise RuntimeError("OpenAI client is unavailable: make sure OPENAI_API_KEY is set")
-
-    res = client.embeddings.create(
+    res = _client.embeddings.create(
         model="text-embedding-3-small",
         input=to_embed
     )
