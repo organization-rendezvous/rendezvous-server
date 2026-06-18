@@ -14,7 +14,11 @@ class RSSCollector:
         keywords = get_topic_keywords(topic)
         cutoff = parse_period(period)
 
-        async with httpx.AsyncClient(timeout=10) as client:
+        headers = {
+        "User-Agent": "Rendezvous/1.0 trend-collector (by /u/yourname)"
+        }
+
+        async with httpx.AsyncClient(timeout=10, headers=headers) as client:
             res = await client.get(self.url)
 
             if res.status_code != 200:

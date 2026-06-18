@@ -55,13 +55,13 @@ class AnalysisJobResultResponse(BaseModel):
 
 class TrendScoreResponse(BaseModel):
     mention_score: float
-    growth_score: float = 0
     diversity_score: float
     influence_score: float
     recency_score: float
     ai_importance_score: float
+    embedding_score: float        
+    trend_momentum_score: float   
     final_score: float
-
 
 class TrendLinkResponse(BaseModel):
     title: str

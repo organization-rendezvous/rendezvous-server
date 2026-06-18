@@ -1,4 +1,4 @@
-# #보관용
+#보관용
 # from __future__ import annotations
 # from copy import deepcopy
 # from datetime import UTC, datetime
@@ -6,7 +6,7 @@
 # from app.core.errors import NotFoundError
 # from app.schemas.settings import UserSettingsResponse
 # from app.schemas.trends import TopicStatus
-# from app.core.types import TopicStatus
+# from app.core.types import TopicStatus, JobStatus 
 
 
 # def utc_now() -> datetime:
@@ -34,7 +34,7 @@
 #         job = {
 #             "id": job_id,
 #             "user_id": user_id,
-#             "status": "pending",
+#             "status": JobStatus.PENDING.value, 
 #             "period": period,
 #             "result_limit": result_limit,
 #             "sources": sources,
@@ -46,12 +46,21 @@
 #         self.jobs[job_id] = job
 #         return deepcopy(job)
 
-#     def update_analysis_job_status(self, job_id: str, status: str, error_message: str | None = None) -> dict:
+#     def update_analysis_job_status(
+#         self,
+#         job_id: str,
+#         status: JobStatus,          
+#         error_message: str | None = None,
+#     ) -> dict:
 #         job = self._job(job_id)
-#         job["status"] = status
+#         job["status"] = status.value 
 #         if error_message:
 #             job["error_message"] = error_message
-#         if status in {"completed", "partial_failed", "failed"}:
+#         if status in {               
+#             JobStatus.COMPLETED,
+#             JobStatus.PARTIAL_FAILED,
+#             JobStatus.FAILED,
+#         }:
 #             job["completed_at"] = utc_now()
 #         return deepcopy(job)
 
@@ -129,8 +138,6 @@
 #                 "created_at": now,
 #             }
 
-    
-
 #             self.trends[trend_id] = row
 #             self.scores[trend_id] = {"trend_id": trend_id, **score, "created_at": now}
 #             self.links[trend_id] = [
@@ -138,7 +145,7 @@
 #                 for link in trend.get("links", [])
 #             ]
 #             saved.append(deepcopy(row))
-#         self.update_analysis_topic_status(topic_id, "completed", "return_result", trend_count=len(saved))
+#         self.update_analysis_topic_status(topic_id, TopicStatus.COMPLETED, "return_result", trend_count=len(saved))
 #         return saved
 
 #     def get_job_status(self, job_id: str) -> dict:
@@ -172,7 +179,11 @@
 #     def get_latest_result(self, user_id: str) -> dict:
 #         completed = [
 #             job for job in self.jobs.values()
-#             if job["user_id"] == user_id and job["status"] in {"completed", "partial_failed"}
+#             if job["user_id"] == user_id
+#             and JobStatus(job["status"]) in { 
+#                 JobStatus.COMPLETED,
+#                 JobStatus.PARTIAL_FAILED,
+#             }
 #         ]
 #         if not completed:
 #             raise NotFoundError("완료된 분석 결과가 없습니다.")
@@ -205,9 +216,9 @@
 
 #     @staticmethod
 #     def _progress(status: str, topics: list[dict]) -> int:
-#         if status == "completed":
+#         if status == JobStatus.COMPLETED.value:
 #             return 100
-#         if status == "failed":
+#         if status == JobStatus.FAILED.value:
 #             return 0
 #         if not topics:
 #             return 0

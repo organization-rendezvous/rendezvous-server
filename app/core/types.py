@@ -24,6 +24,7 @@ class TopicStatus(str, Enum):
     COLLECTING = "collecting"
     CLEANING = "cleaning"
     CLUSTERING = "clustering"
+    EMBEDDING = "embedding"     
     SCORING = "scoring"
     LLM_SUMMARIZING = "llm_summarizing"
     SAVING = "saving"
@@ -37,8 +38,9 @@ class TopicStatus(str, Enum):
             TopicStatus.COLLECTING: 15,
             TopicStatus.CLEANING: 30,
             TopicStatus.CLUSTERING: 45,
-            TopicStatus.SCORING: 60,
-            TopicStatus.LLM_SUMMARIZING: 75,
+            TopicStatus.EMBEDDING: 60,     # ← 추가
+            TopicStatus.SCORING: 70,       # ← 기존 60에서 조정
+            TopicStatus.LLM_SUMMARIZING: 80,  # ← 기존 75에서 조정
             TopicStatus.SAVING: 90,
             TopicStatus.COMPLETED: 100,
             TopicStatus.FAILED: 100,

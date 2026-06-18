@@ -4,7 +4,7 @@ def filter_documents_by_topic(
     documents: list[dict],
     topic: str,
 ) -> list[dict]:
-    return documents
+    # return documents
 
     keywords = TOPIC_KEYWORDS.get(topic)
 
