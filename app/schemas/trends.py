@@ -38,6 +38,7 @@ class TrendSummaryItem(BaseModel):
     title: str
     summary: str
     score: float
+    trend_momentum_score: float = 0.0
     is_rising: bool = True
 
 
@@ -73,6 +74,10 @@ class TrendLinkResponse(BaseModel):
     relevance_score: float | None = None
     credibility_score: float | None = None
 
+class RankHistoryItem(BaseModel):
+    trend_date: str
+    rank: int
+    final_score: float
 
 class TrendDetailResponse(BaseModel):
     trend_id: str
@@ -86,3 +91,4 @@ class TrendDetailResponse(BaseModel):
     keywords: list[str]
     scores: TrendScoreResponse
     links: list[TrendLinkResponse]
+    rank_history: list[RankHistoryItem] = []  # ← 추가

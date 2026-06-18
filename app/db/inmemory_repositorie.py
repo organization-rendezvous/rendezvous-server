@@ -173,6 +173,7 @@ class InMemoryRepository:
             "topic": deepcopy(topic),
             "scores": deepcopy(self.scores.get(trend_id, {})),
             "links": deepcopy(self.links.get(trend_id, [])),
+            "rank_history": [],
         }
 
     def get_latest_result(self, user_id: str) -> dict:

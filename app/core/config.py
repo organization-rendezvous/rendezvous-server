@@ -114,9 +114,50 @@ RSS_SOURCES = {
 
 OFFICIAL_SOURCES = {
     "official_blog": [
+        # AI
+        ("https://openai.com/news/", "OpenAI"),
+        ("https://www.anthropic.com/news", "Anthropic"),
+        ("https://huggingface.co/blog", "HuggingFace"),
+        ("https://mistral.ai/news", "Mistral"),
+        ("https://cohere.com/blog", "Cohere"),
+
+        # Google
         ("https://blog.google/", "Google Blog"),
+        ("https://developers.googleblog.com/", "Google Developers"),
+        ("https://research.google/blog/", "Google Research"),
+        ("https://deepmind.google/discover/blog/", "Google DeepMind"),
+
+        # Meta
         ("https://engineering.fb.com/", "Meta Engineering"),
-        ("https://kakao.ai/blog", "카카오 AI 블로그"),
+        ("https://ai.meta.com/blog/", "Meta AI"),
+
+        # Microsoft
+        ("https://devblogs.microsoft.com/", "Microsoft DevBlogs"),
+        ("https://blogs.microsoft.com/ai/", "Microsoft AI"),
+
+        # AWS
+        ("https://aws.amazon.com/blogs/aws/", "AWS News"),
+        ("https://aws.amazon.com/blogs/machine-learning/", "AWS ML"),
+        ("https://aws.amazon.com/blogs/architecture/", "AWS Architecture"),
+
+        # Cloud
+        ("https://cloud.google.com/blog", "Google Cloud"),
+        ("https://blog.cloudflare.com/", "Cloudflare"),
+        ("https://www.databricks.com/blog", "Databricks"),
+
+        # Developer Platform
+        ("https://github.blog/", "GitHub"),
+        ("https://vercel.com/blog", "Vercel"),
+        ("https://stripe.com/blog", "Stripe"),
+        ("https://shopify.engineering/", "Shopify"),
+        ("https://slack.engineering/", "Slack"),
+
+        # Infra
+        ("https://netflixtechblog.com/", "Netflix"),
+        ("https://eng.uber.com/", "Uber"),
+        ("https://discord.com/blog/tag/engineering", "Discord"),
+        ("https://engineering.atspotify.com/", "Spotify"),
+        ("https://www.figma.com/blog/engineering/", "Figma"),
     ]
 }
 

@@ -193,7 +193,6 @@ class SupabaseRepository:
         period: str,
     ) -> list[dict]:
         saved = []
-        now = utc_now().isoformat()
 
         for rank, trend in enumerate(trends, start=1):
             score = trend["scores"]
@@ -207,6 +206,7 @@ class SupabaseRepository:
                 "normalized_title": trend.get("normalized_title", trend["title"].strip().lower()),
                 "rank": rank,
                 "final_score": score.get("final_score", 0),
+                "trend_momentum_score": score.get("trend_momentum_score", 0),
                 "summary": trend.get("summary", ""),
                 "detail_summary": trend.get("detail_summary", ""),
                 "ai_comment": trend.get("ai_comment", ""),
@@ -231,6 +231,23 @@ class SupabaseRepository:
             }
             self.client.table("trend_scores").insert(score_row).execute()
 
+            daily_row = {
+                "trend_id": trend_id,
+                "trend_key": trend.get("normalized_title", trend["title"].strip().lower()),  # 추가
+                "trend_title": trend["title"],                                                # 추가
+                "topic_name": topic_name,                                                     # 추가
+                "score_date": utc_now().date().isoformat(),                                   # 추가
+                "trend_date": utc_now().date().isoformat(),
+                "rank": rank,
+                "final_score": score.get("final_score", 0),
+                "trend_momentum_score": score.get("trend_momentum_score", 0),
+            }
+            self.client.table("trend_daily_scores").upsert(
+                daily_row,
+                on_conflict="trend_key,topic_name,score_date"
+            ).execute()
+
+
             # trend_links 테이블 저장
             links = trend.get("links", [])
             if links:
@@ -244,9 +261,9 @@ class SupabaseRepository:
                         "author": link.get("author"),
                         "published_at": link.get("published_at").isoformat() 
                             if isinstance(link.get("published_at"), datetime) 
-                            else link.get("published_at"),  # ← datetime → isoformat 변환
+                            else link.get("published_at"),  
                         "summary": link.get("summary"),
-                        "relevance_score": link.get("relevance_score"),
+                        "relevance_score": link.get("final_link_score"),
                         "credibility_score": link.get("credibility_score"),
                     }
                     for link in links
@@ -294,12 +311,20 @@ class SupabaseRepository:
             .eq("trend_id", trend_id)
             .execute()
         )
+        history_res = (
+            self.client.table("trend_daily_scores")
+            .select("trend_date, rank, final_score")
+            .eq("trend_id", trend_id)
+            .order("trend_date")
+            .execute()
+        )
 
         return {
             "trend": trend_res.data,
             "topic": topic_res.data,
             "scores": scores_res.data or {},
             "links": links_res.data or [],
+            "rank_history": history_res.data or [],
         }
 
     # -------------------------

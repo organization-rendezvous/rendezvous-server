@@ -35,6 +35,8 @@ def select_representative_links(trends: list[dict], minimum: int = 3) -> list[di
         for doc in docs:
             # Convert TrendDocument dataclass to dict if needed
             doc_dict = dict(doc.items()) if hasattr(doc, 'items') else doc
+            if not doc_dict.get("source_name"):
+                print(f"source_name 없음: {doc_dict.get('url', 'no url')}")
             
             source_type = doc_dict.get("source_type", "")
             cred = SOURCE_CREDIBILITY.get(source_type, 45)

@@ -43,9 +43,6 @@ from app.analyzers.topic_filter import filter_documents_by_topic
 from app.core.types import TopicStatus
 
 
-logger = logging.getLogger(__name__)
-
-
 async def run_topic_analysis(state: TrendAnalysisState) -> TrendAnalysisState:
     """
     전체 트렌드 분석 workflow 실행 엔트리 포인트
@@ -65,8 +62,6 @@ async def run_topic_analysis(state: TrendAnalysisState) -> TrendAnalysisState:
         return return_result(state)
 
     except Exception as exc:
-        # workflow 실패 시 상태 저장 및 에러 기록
-        logger.exception("Topic analysis failed: %s", state.get("topic"))
         repository.update_analysis_topic_status(
             state["topic_id"],
             TopicStatus.FAILED,  
@@ -105,7 +100,6 @@ async def collect_sources(state: TrendAnalysisState) -> TrendAnalysisState:
         TopicStatus.COLLECTING, 
         "collect_sources"
     )
-    logger.info(f"=====period==== {state['period']} =====period====")
 
     result = await collect_documents(state["topic"], state["period"], state["sources"])
 
