@@ -1,6 +1,6 @@
 import logging
 from app.core.config import get_settings
-from app.db.repositories import repository
+from app.db.repository_factory import repository
 from app.graph import run_topic_analysis
 from app.schemas.trends import AnalyzeTrendRequest
 from app.graph.state import TrendAnalysisInputState, TrendAnalysisState

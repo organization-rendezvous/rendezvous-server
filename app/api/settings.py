@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.db.repositories import repository
+from app.db.repository_factory import repository
 from app.schemas.settings import UpdateUserSettingsRequest, UserSettingsResponse
 
 router = APIRouter(prefix="/settings", tags=["settings"])

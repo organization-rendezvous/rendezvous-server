@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 from app.api.router import router
 from app.core.config import get_settings
 from app.core.errors import AppError
+from app.core.log.middleware import AccessLogMiddleware
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -26,6 +27,7 @@ def create_app() -> FastAPI:
         title=settings.app_name,
         debug=settings.app_debug,
     )
+    app.add_middleware(AccessLogMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[settings.frontend_origin],
@@ -33,6 +35,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    
 
     @app.exception_handler(AppError)
     async def app_error_handler(_request: Request, exc: AppError) -> JSONResponse:

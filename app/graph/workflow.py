@@ -1,4 +1,3 @@
-import logging
 
 # 문서 전처리 + dict → candidate 변환 (클러스터링 이전 단계)
 from app.analyzers import generate_candidates
@@ -7,7 +6,7 @@ from app.analyzers import generate_candidates
 from app.collectors import collect_documents
 
 # 분석 결과 저장 및 상태 업데이트 (DB 레이어, 현재는 InMemory 포함)
-from app.db.repositories import repository
+from app.db.repository_factory import repository
 
 # 전체 트렌드 분석 workflow 상태 객체 정의
 from app.graph.state import TrendAnalysisState

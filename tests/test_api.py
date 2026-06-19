@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.db.repositories import repository
+from app.db.repository_factory import repository
 from app.main import app
 
 

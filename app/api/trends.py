@@ -1,7 +1,7 @@
 from app.schemas.trends import AnalysisTopicStatusResponse
 from fastapi import APIRouter, BackgroundTasks, Response, status
 
-from app.db.repositories import repository
+from app.db.repository_factory import repository
 from app.schemas.trends import (
     AnalysisJobResultResponse,
     AnalysisJobStatusResponse,
