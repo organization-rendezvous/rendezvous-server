@@ -19,11 +19,19 @@ class TrendsMixin:
         saved = []
 
         for rank, trend in enumerate(trends, start=1):
-            score = trend["scores"]
+           saved = []
+
+        # topic_id로 job_id 조회
+        topic = self._topic(topic_id)
+        job_id = topic["job_id"]
+
+        for rank, trend in enumerate(trends, start=1):
+            score = trend.get("scores", {}) or {}
             if hasattr(score, "__dataclass_fields__"):
                 score = {k: getattr(score, k) for k in score.__dataclass_fields__}
 
             trend_row = {
+                "job_id": job_id,  # ← 추가
                 "topic_id": topic_id,
                 "title": trend["title"],
                 "normalized_title": trend.get("normalized_title", trend["title"].strip().lower()),
@@ -54,6 +62,7 @@ class TrendsMixin:
         )
         return saved
 
+
     def _save_trend_score(self, trend_id: str, score: dict) -> None:
         score_row = {
             "trend_id": trend_id,
@@ -67,6 +76,7 @@ class TrendsMixin:
             "final_score": score.get("final_score", 0),
         }
         self.client.table("trend_scores").insert(score_row).execute()
+
 
     def _save_daily_score(
         self, trend_id: str, topic_name: str, trend: dict, rank: int, score: dict
@@ -88,28 +98,31 @@ class TrendsMixin:
             on_conflict="trend_key,topic_name,score_date",
         ).execute()
 
+
     def _save_trend_links(self, trend_id: str, links: list[dict]) -> None:
         if not links:
             return
 
-        link_rows = [
-            {
+        link_rows = []
+
+        for link in links:
+            pub = link.get("published_at")
+
+            link_rows.append({
                 "trend_id": trend_id,
                 "title": link.get("title", ""),
                 "url": link.get("url", ""),
                 "source_name": link.get("source_name", ""),
                 "source_type": link.get("source_type", "news"),
                 "author": link.get("author"),
-                "published_at": link.get("published_at").isoformat()
-                    if isinstance(link.get("published_at"), datetime)
-                    else link.get("published_at"),
+                "published_at": pub.isoformat() if isinstance(pub, datetime) else pub,
                 "summary": link.get("summary"),
                 "relevance_score": link.get("final_link_score"),
                 "credibility_score": link.get("credibility_score"),
-            }
-            for link in links
-        ]
+            })
+
         self.client.table("trend_links").insert(link_rows).execute()
+
 
     def get_trend_detail(self, trend_id: str) -> dict:
         trend_res = (
@@ -157,3 +170,24 @@ class TrendsMixin:
             "links": links_res.data or [],
             "rank_history": history_res.data or [],
         }
+    
+    
+    def get_trends_by_topic_ids(self, topic_ids: list[str]):
+        return (
+            self.client.table("trends")
+            .select("*")
+            .in_("topic_id", topic_ids)
+            .execute()
+            .data
+        )
+    
+    
+    def get_links_by_trend_ids(self, trend_ids: list[str]):
+        return (
+            self.client.table("trend_links")
+            .select("*")
+            .in_("trend_id", trend_ids)
+            .execute()
+            .data
+        )
+    

@@ -16,6 +16,7 @@ class TopicsMixin:
         res = self.client.table("analysis_topics").insert(row).execute()
         return res.data[0]
 
+
     def update_analysis_topic_status(
         self,
         topic_id: str,
@@ -46,6 +47,7 @@ class TopicsMixin:
         )
         return res.data[0]
 
+
     def _topic(self, topic_id: str) -> dict:
         res = (
             self.client.table("analysis_topics")
@@ -57,3 +59,16 @@ class TopicsMixin:
         if not res.data:
             raise NotFoundError("분석 주제를 찾을 수 없습니다.")
         return res.data
+    
+
+    def get_completed_topics(self):
+        return (
+            self.client.table("analysis_topics")
+            .select("*")
+            .eq("status", TopicStatus.COMPLETED.value)
+            .execute()
+            .data
+        )
+    
+
+    

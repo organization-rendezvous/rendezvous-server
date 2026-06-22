@@ -15,7 +15,7 @@ from app.graph.state import TrendAnalysisState
 from app.scorers import score_trends
 
 # 트렌드별 대표 링크 선정 로직
-from app.services.links import select_representative_links
+from app.services.trend.links import select_representative_links
 
 # LLM 기반 트렌드 요약 batch 생성
 from app.llm.summaries import generate_trend_summaries_batch

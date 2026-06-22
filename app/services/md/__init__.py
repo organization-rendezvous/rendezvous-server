@@ -1,6 +1,3 @@
-from app.services.trend.analysis import start_analysis, run_analysis_job
-from app.services.trend.links import select_representative_links
-
 from app.services.md.md_export_service import MdExportService
 from app.services.md.md_job_service import MdJobService
 from app.services.md.md_job_resolver import MdJobResolver
@@ -11,10 +8,6 @@ from app.services.md.md_settings_service import MdSettingsService
 from app.services.md.md_exporter import MdExporter
 
 __all__ = [
-    "start_analysis",
-    "run_analysis_job",
-    "select_representative_links",
-
     "MdExportService",
     "MdJobService",
     "MdJobResolver",
