@@ -191,3 +191,100 @@ class TrendsMixin:
             .data
         )
     
+
+    def get_recent_trends_for_chat(
+        self,
+        *,
+        keyword: str,
+        limit: int = 10,
+        days: int = 7,
+    ) -> list[dict]:
+        """
+        News Chat용 내부 트렌드 검색.
+
+        - 최근 N일(기본 7일) 이내 트렌드를 대상으로 한다.
+        - title / summary / keywords 에 keyword가 포함된 항목을 조회한다.
+        - trend_links 중 relevance_score 최고값 링크 1건을 url로 노출한다.
+
+        추후 Supabase full-text search(to_tsvector / plainto_tsquery)로
+        교체하면 정확도를 높일 수 있다.
+        """
+        from datetime import UTC, datetime, timedelta
+
+        cutoff = (datetime.now(UTC) - timedelta(days=days)).date().isoformat()
+
+        # 1. 최근 트렌드 조회
+        trend_res = (
+            self.client.table("trends")
+            .select("id, title, summary, keywords, trend_date, final_score")
+            .gte("trend_date", cutoff)
+            .order("final_score", desc=True)
+            .limit(50)
+            .execute()
+        )
+        trends = trend_res.data or []
+
+        # 2. trend_id 기준 중복 제거 (같은 트렌드가 여러 날짜로 저장된 경우 대비)
+        seen_titles: set[str] = set()
+        deduped: list[dict] = []
+        for t in trends:
+            norm = (t.get("title") or "").strip().lower()
+            if norm not in seen_titles:
+                seen_titles.add(norm)
+                deduped.append(t)
+
+        # 3. 키워드 필터 (Python side)
+        kw = keyword.lower()
+        matched = [
+            t for t in deduped
+            if kw in (t.get("title") or "").lower()
+            or kw in (t.get("summary") or "").lower()
+            or any(kw in k.lower() for k in (t.get("keywords") or []))
+        ]
+
+        if not matched:
+            # 매칭 없으면 중복 제거된 전체에서 최신 순 limit개 반환
+            matched = deduped[:limit]
+
+        # 4. 상위 limit개 트렌드에 대표 링크 1건씩 붙이기 (url 있는 것만)
+        trend_ids = [t["id"] for t in matched[:limit]]
+        links_res = (
+            self.client.table("trend_links")
+            .select("trend_id, title, url, source_name, published_at, summary, relevance_score")
+            .in_("trend_id", trend_ids)
+            .neq("url", "")          # url 빈 행 제외
+            .not_.is_("url", "null") # url null 행 제외
+            .execute()
+        )
+        links_by_trend: dict[str, dict] = {}
+        for link in (links_res.data or []):
+            if not link.get("url"):  # 혹시 빈 문자열 통과한 경우 추가 방어
+                continue
+            tid = link["trend_id"]
+            existing = links_by_trend.get(tid)
+            if existing is None or (link.get("relevance_score") or 0) > (existing.get("relevance_score") or 0):
+                links_by_trend[tid] = link
+
+        # 5. 최종 반환 — url 없는 트렌드는 제외
+        result = []
+        for t in matched[:limit]:
+            best_link = links_by_trend.get(t["id"])
+            if not best_link:
+                continue  # 유효한 링크가 없으면 카드로 노출하지 않음
+            result.append({
+                "id": t["id"],
+                "title": t["title"],
+                "summary": t.get("summary"),
+                "keywords": t.get("keywords", []),
+                "url": best_link["url"],
+                "source_name": best_link.get("source_name"),
+                "published_at": best_link.get("published_at"),
+                "final_score": t.get("final_score", 0),
+            })
+
+        return result
+    
+
+    
+
+    

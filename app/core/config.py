@@ -205,8 +205,6 @@ STEP_PROGRESS_MAP = {
 }
 
 
-
-
 #환경번수 설정
 class Settings(BaseSettings):
     app_name: str = "Rendezvous API"
@@ -237,3 +235,4 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+
