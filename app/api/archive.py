@@ -30,10 +30,7 @@ from app.schemas.archive import (
 router = APIRouter(prefix="/archive", tags=["archive"])
 
 
-# ─────────────────────────────────────────────
 # 보관 / 해제
-# ─────────────────────────────────────────────
-
 @router.post("/news", status_code=status.HTTP_201_CREATED)
 async def create_archive(request: CreateArchiveRequest) -> CreateArchiveResponse:
     """뉴스 상세 데이터를 스냅샷으로 복제하여 보관함에 저장합니다."""
@@ -87,10 +84,7 @@ async def delete_archive(archive_id: str) -> DeleteArchiveResponse:
     return DeleteArchiveResponse(deleted=True)
 
 
-# ─────────────────────────────────────────────
 # 보관 여부 확인
-# ─────────────────────────────────────────────
-
 @router.get("/news/check")
 async def check_archive(title: str) -> CheckArchiveResponse:
     """제목 기준으로 현재 보관 여부를 확인합니다."""
@@ -100,10 +94,7 @@ async def check_archive(title: str) -> CheckArchiveResponse:
     return CheckArchiveResponse(is_archived=False)
 
 
-# ─────────────────────────────────────────────
 # 보관함 목록
-# ─────────────────────────────────────────────
-
 @router.get("/news")
 async def list_archive(
     topic: str | None = None,
@@ -130,10 +121,7 @@ async def list_archive(
     )
 
 
-# ─────────────────────────────────────────────
 # 보관 뉴스 상세
-# ─────────────────────────────────────────────
-
 @router.get("/news/{archive_id}")
 async def get_archive_detail(archive_id: str) -> ArchiveDetailResponse:
     """보관 뉴스 본문 + 스타일 + 주석을 함께 반환합니다."""
@@ -176,10 +164,7 @@ async def get_archive_detail(archive_id: str) -> ArchiveDetailResponse:
     )
 
 
-# ─────────────────────────────────────────────
 # 내용 수정 (summary / detail_summary / ai_comment)
-# ─────────────────────────────────────────────
-
 @router.patch("/news/{archive_id}/content")
 async def update_content(archive_id: str, request: UpdateContentRequest) -> UpdateContentResponse:
     """보관 뉴스의 summary / detail_summary / ai_comment를 부분 수정합니다.
@@ -199,10 +184,7 @@ async def update_content(archive_id: str, request: UpdateContentRequest) -> Upda
     )
 
 
-# ─────────────────────────────────────────────
 # 메모
-# ─────────────────────────────────────────────
-
 @router.patch("/news/{archive_id}/memo")
 async def update_memo(archive_id: str, request: UpdateMemoRequest) -> UpdateMemoResponse:
     """뉴스 전체 메모를 수정합니다 (뉴스 1건당 1개)."""
@@ -210,10 +192,7 @@ async def update_memo(archive_id: str, request: UpdateMemoRequest) -> UpdateMemo
     return UpdateMemoResponse(archive_id=updated["id"], memo=updated["memo"])
 
 
-# ─────────────────────────────────────────────
 # 스타일 (서식)
-# ─────────────────────────────────────────────
-
 @router.post("/news/{archive_id}/styles", status_code=status.HTTP_201_CREATED)
 async def create_style(archive_id: str, request: CreateStyleRequest) -> CreateStyleResponse:
     """선택한 텍스트 구간에 bold / underline / highlight / color 서식을 저장합니다."""
@@ -239,10 +218,7 @@ async def delete_style(archive_id: str, style_id: str) -> DeleteStyleResponse:
     return DeleteStyleResponse(deleted=True)
 
 
-# ─────────────────────────────────────────────
-# 주석 (Comment)
-# ─────────────────────────────────────────────
-
+# 주석
 @router.post("/news/{archive_id}/comments", status_code=status.HTTP_201_CREATED)
 async def create_comment(archive_id: str, request: CreateCommentRequest) -> CreateCommentResponse:
     """텍스트 구간을 드래그하여 주석을 추가합니다."""

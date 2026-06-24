@@ -35,6 +35,8 @@ async def _safe_fetch(
         documents.extend(docs)
 
     except Exception as e:
+        print(traceback.format_exc()) 
+        
         errors.append({
             "source": source_type,
             "message": str(e),
@@ -78,3 +80,5 @@ async def collect_documents(topic: str, period: str, sources: list[str]) -> dict
         "documents": documents,
         "errors": errors,
     }
+
+

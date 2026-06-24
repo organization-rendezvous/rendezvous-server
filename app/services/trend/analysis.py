@@ -1,12 +1,10 @@
-import logging
 from app.core.config import get_settings
 from app.db.repository_factory import repository
 from app.graph import run_topic_analysis
 from app.schemas.trends import AnalyzeTrendRequest
-from app.graph.state import TrendAnalysisInputState, TrendAnalysisState
-
+from app.graph.trend.state import TrendAnalysisInputState, TrendAnalysisState
 from app.core.types import JobStatus, TopicStatus
-
+import logging
 logger = logging.getLogger(__name__)
 
 
@@ -42,9 +40,7 @@ def start_analysis(request: AnalyzeTrendRequest) -> dict:
     return job
 
 
-# ----------------------------
 # 핵심: Input → Pipeline state 변환
-# ----------------------------
 def build_initial_state(input_state: TrendAnalysisInputState) -> TrendAnalysisState:
     return {
         **input_state,

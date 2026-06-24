@@ -1,8 +1,11 @@
 import logging
-#디버그 로그 설정(안나오게 하는거)
+
+# 디버그 로그 숨김
 logging.getLogger("httpcore").setLevel(logging.WARNING)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("hpack").setLevel(logging.WARNING)
+logging.getLogger("openai").setLevel(logging.WARNING)
+logging.getLogger("openai._base_client").setLevel(logging.WARNING)
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware

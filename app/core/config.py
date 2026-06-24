@@ -176,6 +176,9 @@ NEWS_SOURCES = {
     ]
 }
 
+#자료 최대 글짜 수
+MAX_EMBEDDING_CHARS = 4000
+
 
 
 def get_topic_keywords(topic: str) -> list[str]:
@@ -203,6 +206,9 @@ STEP_PROGRESS_MAP = {
     PipelineStep.LLM_SUMMARIZING: 85,
     PipelineStep.SAVING: 95,
 }
+
+#기본 유저 id설정
+DEFAULT_USER = "personal-user"
 
 
 #환경번수 설정

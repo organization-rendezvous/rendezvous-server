@@ -14,9 +14,7 @@ INFLUENCE_BY_SOURCE = {
 }
 
 
-# ----------------------------
 # Time series
-# ----------------------------
 
 def _build_time_series(documents: list[TrendDocument]) -> list[dict]:
     buckets: dict[int, int] = {}
@@ -68,9 +66,7 @@ def _trend_momentum_score(time_series: list[dict]) -> float:
     return max(0.0, min(100.0, 50 + avg_growth * 50))
 
 
-# ----------------------------
 # Core scoring helpers
-# ----------------------------
 
 def _diversity_score(source_types: list[str]) -> float:
     return min(100.0, 35.0 + len(set(source_types)) * 22.0)

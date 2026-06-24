@@ -18,6 +18,7 @@ class SettingsMixin:
             return self.upsert_user_settings(default)
         return res.data
 
+
     def upsert_user_settings(self, settings: dict) -> dict:
         res = (
             self.client.table("user_settings")

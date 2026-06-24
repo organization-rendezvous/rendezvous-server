@@ -31,9 +31,8 @@ class MdJobService:
         # 4. 최신 상태 반환
         return self.repository.get_job_status(job_id)
 
-    # -------------------------
+
     # 내부 유틸
-    # -------------------------
     def _get_latest_today_job(self, user_id: str) -> dict | None:
         res = (
             self.repository.client.table("analysis_jobs")

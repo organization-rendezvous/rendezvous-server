@@ -7,10 +7,7 @@ from .base import utc_now
 class ChatMixin:
     """chat_sessions / chat_messages / chat_news_cards 관련 메서드."""
 
-    # ─────────────────────────────────────────
     # Session
-    # ─────────────────────────────────────────
-
     def create_chat_session(
         self,
         *,
@@ -69,10 +66,7 @@ class ChatMixin:
         if not session.get("title"):
             self.update_chat_session(session_id, title=title)
 
-    # ─────────────────────────────────────────
     # Message
-    # ─────────────────────────────────────────
-
     def save_user_message(self, *, session_id: str, content: str) -> dict:
         row = {
             "session_id": session_id,
@@ -112,9 +106,7 @@ class ChatMixin:
         )
         return res.data or []
 
-    # ─────────────────────────────────────────
     # News Cards
-    # ─────────────────────────────────────────
 
     def save_news_cards(self, *, message_id: str, cards: list[dict]) -> list[dict]:
         if not cards:

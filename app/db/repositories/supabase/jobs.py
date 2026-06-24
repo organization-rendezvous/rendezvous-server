@@ -46,6 +46,7 @@ class JobsMixin:
         )
         return res.data[0]
 
+
     def get_job_status(self, job_id: str) -> dict:
         job_res = (
             self.client.table("analysis_jobs")
@@ -68,6 +69,7 @@ class JobsMixin:
         progress = self._progress(job["status"], topics)
 
         return {"job": job, "topics": topics, "progress": progress}
+
 
     def get_job_result(self, job_id: str) -> dict:
         job_res = (
@@ -101,6 +103,7 @@ class JobsMixin:
 
         return {"job": job_res.data, "topics": payload_topics}
 
+
     def get_latest_result(self, user_id: str) -> dict:
         res = (
             self.client.table("analysis_jobs")
@@ -114,6 +117,7 @@ class JobsMixin:
         if not res.data:
             raise NotFoundError("완료된 분석 결과가 없습니다.")
         return self.get_job_result(res.data[0]["id"])
+
 
     @staticmethod
     def _progress(status: str, topics: list[dict]) -> int:

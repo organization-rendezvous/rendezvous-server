@@ -6,10 +6,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 
-# ─────────────────────────────────────────────
 # 공통 서브 모델
-# ─────────────────────────────────────────────
-
 class StyleItem(BaseModel):
     style_id: str
     start_offset: int
@@ -36,10 +33,8 @@ class ArchiveListItem(BaseModel):
     saved_at: datetime
 
 
-# ─────────────────────────────────────────────
-# 보관 (Archive)
-# ─────────────────────────────────────────────
 
+# 보관 (Archive)
 class CreateArchiveRequest(BaseModel):
     trend_id: str
 
@@ -53,19 +48,14 @@ class DeleteArchiveResponse(BaseModel):
     deleted: bool
 
 
-# ─────────────────────────────────────────────
 # 보관 여부 확인
-# ─────────────────────────────────────────────
-
 class CheckArchiveResponse(BaseModel):
     is_archived: bool
     archive_id: str | None = None
 
 
-# ─────────────────────────────────────────────
-# 보관함 목록
-# ─────────────────────────────────────────────
 
+# 보관함 목록
 class ListArchiveResponse(BaseModel):
     items: list[ArchiveListItem]
     page: int
@@ -73,10 +63,7 @@ class ListArchiveResponse(BaseModel):
     total: int
 
 
-# ─────────────────────────────────────────────
 # 보관 뉴스 상세
-# ─────────────────────────────────────────────
-
 class ArchiveDetailResponse(BaseModel):
     archive_id: str
     topic: str
@@ -92,10 +79,7 @@ class ArchiveDetailResponse(BaseModel):
     saved_at: datetime
 
 
-# ─────────────────────────────────────────────
 # 내용 수정 (summary / detail_summary / ai_comment)
-# ─────────────────────────────────────────────
-
 class UpdateContentRequest(BaseModel):
     summary: str | None = None
     detail_summary: str | None = None
@@ -110,10 +94,7 @@ class UpdateContentResponse(BaseModel):
     updated_at: datetime
 
 
-# ─────────────────────────────────────────────
 # 메모
-# ─────────────────────────────────────────────
-
 class UpdateMemoRequest(BaseModel):
     memo: str
 
@@ -123,10 +104,8 @@ class UpdateMemoResponse(BaseModel):
     memo: str
 
 
-# ─────────────────────────────────────────────
-# 스타일
-# ─────────────────────────────────────────────
 
+# 스타일
 class CreateStyleRequest(BaseModel):
     start_offset: int
     end_offset: int
@@ -146,10 +125,7 @@ class DeleteStyleResponse(BaseModel):
     deleted: bool
 
 
-# ─────────────────────────────────────────────
 # 주석 (Comment)
-# ─────────────────────────────────────────────
-
 class CreateCommentRequest(BaseModel):
     start_offset: int
     end_offset: int

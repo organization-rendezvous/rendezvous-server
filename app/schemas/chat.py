@@ -6,9 +6,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 
-# ─────────────────────────────────────────────
 # 공통 서브 모델
-# ─────────────────────────────────────────────
 
 class NewsCardItem(BaseModel):
     card_id: str
@@ -29,9 +27,7 @@ class MessageItem(BaseModel):
     created_at: datetime | None = None
 
 
-# ─────────────────────────────────────────────
 # Session API
-# ─────────────────────────────────────────────
 
 class CreateSessionRequest(BaseModel):
     title: str | None = None
@@ -73,9 +69,7 @@ class DeleteSessionResponse(BaseModel):
     deleted: bool
 
 
-# ─────────────────────────────────────────────
 # Message API
-# ─────────────────────────────────────────────
 
 class SendMessageRequest(BaseModel):
     message: str

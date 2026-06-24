@@ -4,7 +4,9 @@ def filter_documents_by_topic(
     documents: list[dict],
     topic: str,
 ) -> list[dict]:
-    # return documents
+    
+    print("documents type =", type(documents))
+    
 
     keywords = TOPIC_KEYWORDS.get(topic)
 
@@ -13,7 +15,9 @@ def filter_documents_by_topic(
 
     filtered = []
 
+
     for doc in documents:
+       
         text = (
             doc.get("title", "")
             + " "
@@ -24,6 +28,8 @@ def filter_documents_by_topic(
 
         if any(keyword.lower() in text for keyword in keywords):
             filtered.append(doc)
+
+    print("filtered types =",set(type(x).__name__ for x in filtered))
 
 
     return filtered

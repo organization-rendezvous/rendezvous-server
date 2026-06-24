@@ -77,3 +77,4 @@ def select_representative_links(trends: list[dict], minimum: int = 3) -> list[di
         })
 
     return enriched
+

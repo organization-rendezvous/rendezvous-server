@@ -28,9 +28,7 @@ from app.services.chat import (
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 
-# ─────────────────────────────────────────────
 # Session
-# ─────────────────────────────────────────────
 
 @router.post("/sessions", status_code=status.HTTP_201_CREATED)
 async def create_chat_session(request: CreateSessionRequest) -> CreateSessionResponse:
@@ -82,10 +80,7 @@ async def delete_chat_session(session_id: str) -> DeleteSessionResponse:
     return DeleteSessionResponse(deleted=True)
 
 
-# ─────────────────────────────────────────────
 # Message
-# ─────────────────────────────────────────────
-
 @router.post("/sessions/{session_id}/messages", status_code=status.HTTP_201_CREATED)
 async def send_chat_message(
     session_id: str, request: SendMessageRequest
@@ -100,10 +95,7 @@ async def send_chat_message(
     )
 
 
-# ─────────────────────────────────────────────
 # 변환 헬퍼
-# ─────────────────────────────────────────────
-
 def _to_message_item(msg: dict) -> MessageItem:
     return MessageItem(
         message_id=msg["id"],

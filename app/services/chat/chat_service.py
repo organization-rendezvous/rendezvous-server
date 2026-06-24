@@ -1,24 +1,18 @@
 from __future__ import annotations
-
-import logging
-
 from app.db.repository_factory import repository
-from app.graph.chat_workflow import run_chat_workflow
-
+from app.graph.chat.workflow import run_chat_workflow
+from app.core.config import DEFAULT_USER
+import logging
 logger = logging.getLogger(__name__)
 
-_DEFAULT_USER = "personal-user"
 
-
-# ─────────────────────────────────────────────
 # Session
-# ─────────────────────────────────────────────
 
-def create_session(*, user_id: str = _DEFAULT_USER, title: str | None = None) -> dict:
+def create_session(*, user_id: str = DEFAULT_USER, title: str | None = None) -> dict:
     return repository.create_chat_session(user_id=user_id, title=title)
 
 
-def list_sessions(*, user_id: str = _DEFAULT_USER) -> list[dict]:
+def list_sessions(*, user_id: str = DEFAULT_USER) -> list[dict]:
     return repository.list_chat_sessions(user_id=user_id)
 
 
@@ -50,10 +44,7 @@ def delete_session(session_id: str) -> bool:
     return repository.delete_chat_session(session_id)
 
 
-# ─────────────────────────────────────────────
 # Message
-# ─────────────────────────────────────────────
-
 def send_message(*, session_id: str, user_message: str) -> dict:
     """
     1. 사용자 메시지 저장
@@ -71,8 +62,7 @@ def send_message(*, session_id: str, user_message: str) -> dict:
     # workflow 실행
     state = run_chat_workflow(
         session_id=session_id,
-        user_message=user_message,
-        repository=repository,
+        user_message=user_message
     )
 
     # assistant 메시지 저장
