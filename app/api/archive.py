@@ -21,6 +21,8 @@ from app.schemas.archive import (
     StyleItem,
     UpdateCommentRequest,
     UpdateCommentResponse,
+    UpdateContentRequest,
+    UpdateContentResponse,
     UpdateMemoRequest,
     UpdateMemoResponse,
 )
@@ -171,6 +173,29 @@ async def get_archive_detail(archive_id: str) -> ArchiveDetailResponse:
             for c in comments
         ],
         saved_at=news["saved_at"],
+    )
+
+
+# ─────────────────────────────────────────────
+# 내용 수정 (summary / detail_summary / ai_comment)
+# ─────────────────────────────────────────────
+
+@router.patch("/news/{archive_id}/content")
+async def update_content(archive_id: str, request: UpdateContentRequest) -> UpdateContentResponse:
+    """보관 뉴스의 summary / detail_summary / ai_comment를 부분 수정합니다.
+    포함된 필드만 업데이트되며, 원본 트렌드 데이터에는 영향 없습니다."""
+    updated = repository.update_archive_content(
+        archive_id,
+        summary=request.summary,
+        detail_summary=request.detail_summary,
+        ai_comment=request.ai_comment,
+    )
+    return UpdateContentResponse(
+        archive_id=updated["id"],
+        summary=updated.get("summary"),
+        detail_summary=updated.get("detail_summary"),
+        ai_comment=updated.get("ai_comment"),
+        updated_at=updated["updated_at"],
     )
 
 

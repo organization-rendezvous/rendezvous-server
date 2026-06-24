@@ -105,6 +105,33 @@ class ArchiveMixin:
         )
         return res.data[0] if res.data else None
 
+    def update_archive_content(
+        self,
+        archive_id: str,
+        *,
+        summary: str | None = None,
+        detail_summary: str | None = None,
+        ai_comment: str | None = None,
+    ) -> dict:
+        """summary / detail_summary / ai_comment partial update. 포함된 필드만 업데이트."""
+        patch: dict = {"updated_at": utc_now().isoformat()}
+        if summary is not None:
+            patch["summary"] = summary
+        if detail_summary is not None:
+            patch["detail_summary"] = detail_summary
+        if ai_comment is not None:
+            patch["ai_comment"] = ai_comment
+
+        res = (
+            self.client.table("archive_news")
+            .update(patch)
+            .eq("id", archive_id)
+            .execute()
+        )
+        if not res.data:
+            raise NotFoundError("보관 뉴스를 찾을 수 없습니다.")
+        return res.data[0]
+
     def update_archive_memo(self, archive_id: str, *, memo: str) -> dict:
         res = (
             self.client.table("archive_news")

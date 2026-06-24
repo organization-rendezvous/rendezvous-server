@@ -93,6 +93,24 @@ class ArchiveDetailResponse(BaseModel):
 
 
 # ─────────────────────────────────────────────
+# 내용 수정 (summary / detail_summary / ai_comment)
+# ─────────────────────────────────────────────
+
+class UpdateContentRequest(BaseModel):
+    summary: str | None = None
+    detail_summary: str | None = None
+    ai_comment: str | None = None
+
+
+class UpdateContentResponse(BaseModel):
+    archive_id: str
+    summary: str | None = None
+    detail_summary: str | None = None
+    ai_comment: str | None = None
+    updated_at: datetime
+
+
+# ─────────────────────────────────────────────
 # 메모
 # ─────────────────────────────────────────────
 
