@@ -34,7 +34,6 @@ router = APIRouter(prefix="/archive", tags=["archive"])
 @router.post("/news", status_code=status.HTTP_201_CREATED)
 async def create_archive(request: CreateArchiveRequest) -> CreateArchiveResponse:
     """뉴스 상세 데이터를 스냅샷으로 복제하여 보관함에 저장합니다."""
-    # 원본 트렌드 상세 조회
     data = repository.get_trend_detail(request.trend_id)
     trend = data["trend"]
     topic = data["topic"]
@@ -42,10 +41,8 @@ async def create_archive(request: CreateArchiveRequest) -> CreateArchiveResponse
     links = data["links"]
     rank_history = data["rank_history"]
 
-    # 점수 상세 직렬화
     score_detail = {k: v for k, v in scores.items() if k not in {"id", "trend_id", "created_at", "updated_at"}}
 
-    # 링크 스냅샷 직렬화
     link_snapshot = [
         {
             "title": lk.get("title", ""),
@@ -164,22 +161,26 @@ async def get_archive_detail(archive_id: str) -> ArchiveDetailResponse:
     )
 
 
-# 내용 수정 (summary / detail_summary / ai_comment)
+# 내용 수정 (title / summary / detail_summary / ai_comment / keywords)
 @router.patch("/news/{archive_id}/content")
 async def update_content(archive_id: str, request: UpdateContentRequest) -> UpdateContentResponse:
-    """보관 뉴스의 summary / detail_summary / ai_comment를 부분 수정합니다.
+    """보관 뉴스의 title / summary / detail_summary / ai_comment / keywords를 부분 수정합니다.
     포함된 필드만 업데이트되며, 원본 트렌드 데이터에는 영향 없습니다."""
     updated = repository.update_archive_content(
         archive_id,
+        title=request.title,
         summary=request.summary,
         detail_summary=request.detail_summary,
         ai_comment=request.ai_comment,
+        keywords=request.keywords,
     )
     return UpdateContentResponse(
         archive_id=updated["id"],
+        title=updated.get("title"),
         summary=updated.get("summary"),
         detail_summary=updated.get("detail_summary"),
         ai_comment=updated.get("ai_comment"),
+        keywords=updated.get("keywords"),
         updated_at=updated["updated_at"],
     )
 

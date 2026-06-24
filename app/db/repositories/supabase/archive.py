@@ -7,10 +7,7 @@ from .base import utc_now
 class ArchiveMixin:
     """archive_news / archive_news_links / archive_news_styles / archive_news_comments 관련 메서드."""
 
-    # ─────────────────────────────────────────
     # Archive News (보관 뉴스)
-    # ─────────────────────────────────────────
-
     def create_archive_news(
         self,
         *,
@@ -44,6 +41,7 @@ class ArchiveMixin:
         }
         res = self.client.table("archive_news").insert(row).execute()
         return res.data[0]
+
 
     def get_archive_news(self, archive_id: str) -> dict:
         res = (
@@ -85,6 +83,7 @@ class ArchiveMixin:
             "size": size,
         }
 
+
     def delete_archive_news(self, archive_id: str, *, user_id: str = "personal-user") -> bool:
         self.client.table("archive_news").delete().eq("id", archive_id).eq("user_id", user_id).execute()
         return True
@@ -105,22 +104,30 @@ class ArchiveMixin:
         )
         return res.data[0] if res.data else None
 
+
     def update_archive_content(
         self,
         archive_id: str,
         *,
+        title: str | None = None,
         summary: str | None = None,
         detail_summary: str | None = None,
         ai_comment: str | None = None,
+        keywords: list[str] | None = None,
     ) -> dict:
-        """summary / detail_summary / ai_comment partial update. 포함된 필드만 업데이트."""
+        """title / summary / detail_summary / ai_comment / keywords partial update.
+        포함된 필드만 업데이트되며, 원본 트렌드 데이터에는 영향 없습니다."""
         patch: dict = {"updated_at": utc_now().isoformat()}
+        if title is not None:
+            patch["title"] = title
         if summary is not None:
             patch["summary"] = summary
         if detail_summary is not None:
             patch["detail_summary"] = detail_summary
         if ai_comment is not None:
             patch["ai_comment"] = ai_comment
+        if keywords is not None:
+            patch["keywords"] = keywords
 
         res = (
             self.client.table("archive_news")
@@ -131,6 +138,7 @@ class ArchiveMixin:
         if not res.data:
             raise NotFoundError("보관 뉴스를 찾을 수 없습니다.")
         return res.data[0]
+
 
     def update_archive_memo(self, archive_id: str, *, memo: str) -> dict:
         res = (
@@ -143,10 +151,8 @@ class ArchiveMixin:
             raise NotFoundError("보관 뉴스를 찾을 수 없습니다.")
         return res.data[0]
 
-    # ─────────────────────────────────────────
-    # Styles (텍스트 서식)
-    # ─────────────────────────────────────────
 
+    # Styles (텍스트 서식)
     def save_style(
         self,
         *,
@@ -167,6 +173,7 @@ class ArchiveMixin:
         res = self.client.table("archive_news_styles").insert(row).execute()
         return res.data[0]
 
+
     def list_styles(self, archive_id: str) -> list[dict]:
         res = (
             self.client.table("archive_news_styles")
@@ -181,10 +188,8 @@ class ArchiveMixin:
         self.client.table("archive_news_styles").delete().eq("id", style_id).execute()
         return True
 
-    # ─────────────────────────────────────────
-    # Comments (주석)
-    # ─────────────────────────────────────────
 
+    # Comments (주석)
     def save_comment(
         self,
         *,
@@ -204,6 +209,7 @@ class ArchiveMixin:
         res = self.client.table("archive_news_comments").insert(row).execute()
         return res.data[0]
 
+
     def list_comments(self, archive_id: str) -> list[dict]:
         res = (
             self.client.table("archive_news_comments")
@@ -213,6 +219,7 @@ class ArchiveMixin:
             .execute()
         )
         return res.data or []
+
 
     def update_comment(self, comment_id: str, *, content: str) -> dict:
         res = (
@@ -224,6 +231,7 @@ class ArchiveMixin:
         if not res.data:
             raise NotFoundError("주석을 찾을 수 없습니다.")
         return res.data[0]
+
 
     def delete_comment(self, comment_id: str) -> bool:
         self.client.table("archive_news_comments").delete().eq("id", comment_id).execute()

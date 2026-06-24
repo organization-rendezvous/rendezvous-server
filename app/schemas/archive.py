@@ -81,17 +81,23 @@ class ArchiveDetailResponse(BaseModel):
 
 # 내용 수정 (summary / detail_summary / ai_comment)
 class UpdateContentRequest(BaseModel):
+    title: str | None = None
     summary: str | None = None
     detail_summary: str | None = None
     ai_comment: str | None = None
+    keywords: list[str] | None = None
 
 
 class UpdateContentResponse(BaseModel):
     archive_id: str
+
+    title: str | None = None
     summary: str | None = None
     detail_summary: str | None = None
     ai_comment: str | None = None
-    updated_at: datetime
+    keywords: list[str] | None = None
+
+    updated_at: str
 
 
 # 메모
