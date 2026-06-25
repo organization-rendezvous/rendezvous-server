@@ -5,31 +5,36 @@ from app.core.types import PipelineStep
 
 #자료 키워드 관리
 TOPIC_KEYWORDS: dict[str, list[str]] = {
-    "개발": [
-        # 영어
-        "developer", "devtools", "ide", "github", "programming", "coding",
-        "framework", "sdk", "cli", "vscode", "tooling", "opensource",
-        "deployment", "cicd", "git", "software engineer", "web development",
-        "mobile development", "open source", "tech stack", "debugging",
-        "refactoring", "pull request", "code review",
-        # 한국어
-        "개발자", "소프트웨어 개발", "앱 개발", "웹 개발", "서버 개발",
-        "프레임워크", "오픈소스", "라이브러리", "백엔드", "프론트엔드",
-        "데브옵스", "쿠버네티스", "도커", "코딩", "프로그래밍", "깃허브",
-        "풀스택", "클라우드", "마이크로서비스", "api 개발",
+        "개발": [
+        # 영어  
+        "software", "backend", "frontend", "fullstack", "devops", "infrastructure",
+        "kubernetes", "docker", "terraform", "ansible", "jenkins", "github actions",
+        "rest api", "graphql", "microservice", "monorepo", "typescript", "python",
+        "rust", "golang", "java", "kotlin", "swift", "react", "nextjs", "vue",
+        "linux", "terminal", "shell", "npm", "package manager", "dependency",
+        "testing", "unit test", "integration test", "performance", "optimization",
+        "architecture", "design pattern", "database", "orm", "migration",
+        # 한국어  
+        "타입스크립트", "파이썬", "러스트", "고랭", "스위프트", "리액트",
+        "인프라", "테스트", "배포", "빌드", "컨테이너", "서버리스",
+        "데이터베이스", "쿼리", "최적화", "아키텍처", "디자인패턴",
+        "패키지", "의존성", "모노레포", "터미널", "쉘스크립트",
     ],
+
     "ai": [
-        # 영어
-        "artificial intelligence", "llm", "machine learning", "gpt",
-        "chatgpt", "openai", "claude", "gemini", "copilot", "deepmind",
-        "neural network", "transformer", "diffusion", "sora", "midjourney",
-        "large language model", "generative ai", "foundation model",
-        "ai model", "ai agent", "stable diffusion", "hugging face",
-        "fine tuning", "prompt engineering", "rag",
-        # 한국어
-        "인공지능", "머신러닝", "딥러닝", "생성형", "거대언어모델",
-        "생성형 ai", "ai 모델", "ai 서비스", "언어모델", "챗봇",
-        "이미지 생성", "음성 인식", "자연어 처리",
+        # 영어  
+        "anthropic", "mistral", "llama", "grok", "perplexity", "cursor", "devin",
+        "multimodal", "vision model", "text to image", "text to video", "tts",
+        "speech recognition", "embedding", "vector database", "langchain",
+        "langgraph", "llamaindex", "inference", "quantization", "lora",
+        "reinforcement learning", "rlhf", "alignment", "safety", "hallucination",
+        "context window", "token", "benchmark", "eval", "ai assistant",
+        "autonomous agent", "tool use", "function calling", "mcp",
+        # 한국어  
+        "멀티모달", "임베딩", "벡터", "추론", "파인튜닝", "정렬",
+        "환각", "컨텍스트", "벤치마크", "평가", "에이전트", "자율",
+        "텍스트 생성", "이미지 생성", "영상 생성", "음성 합성",
+        "검색 증강", "지식 그래프", "온디바이스", "경량화",
     ],
     "문화/생활": [
         # 영어
@@ -43,15 +48,29 @@ TOPIC_KEYWORDS: dict[str, list[str]] = {
         "헬스", "뷰티", "인테리어", "반려동물", "육아", "웰빙",
     ],
     "사회": [
-        # 영어
+        # 영어 — 정부·정책·사회구조 중심
         "education", "welfare", "environment", "policy", "government",
-        "community", "labor", "housing", "crime", "accident",
-        "social issue", "public health", "inequality", "human rights",
-        "election", "legislation", "protest", "demographics",
-        # 한국어
-        "사회", "교육", "복지", "환경", "정책", "정부", "노동", "주거", "공동체",
-        "사건", "사고", "범죄", "법원", "검찰", "저출생", "고령화", "의료",
-        "복지정책", "선거", "입법", "시위", "인권", "차별",
+        "community", "labor", "housing", "public health", "inequality",
+        "human rights", "election", "legislation", "protest", "demographics",
+        "social issue", "reform", "regulation", "ministry", "parliament",
+        # 한국어 — 정부·정책·사회구조 중심
+        "교육", "복지", "환경", "정책", "정부", "노동", "주거", "공동체",
+        "저출생", "고령화", "의료", "복지정책", "선거", "입법", "시위",
+        "인권", "차별", "규제", "법안", "국회", "장관", "행정",
+        "사회문제", "불평등", "공공",
+    ],
+    "사건사고": [
+        # 영어 — 사건·사고·논란 중심
+        "accident", "incident", "disaster", "crime", "murder", "robbery",
+        "assault", "fraud", "scandal", "controversy", "arrest", "investigation",
+        "shooting", "explosion", "fire", "flood", "earthquake", "collapse",
+        "crash", "missing", "victim", "suspect", "lawsuit", "abuse",
+        "leak", "breach", "recall",
+        # 한국어 — 사건·사고·논란 중심
+        "사건", "사고", "재난", "범죄", "살인", "강도", "폭행", "사기",
+        "스캔들", "논란", "체포", "수사", "구속", "기소", "피의자", "피해자",
+        "화재", "폭발", "붕괴", "침수", "지진", "교통사고", "실종",
+        "구조", "리콜", "유출", "해킹", "갑질", "폭로", "고발",
     ],
     "국제": [
         # 영어
@@ -65,6 +84,7 @@ TOPIC_KEYWORDS: dict[str, list[str]] = {
         "협약", "동맹", "난민", "글로벌 이슈",
     ],
 }
+
 
 RSS_SOURCES = {
     "rss": [

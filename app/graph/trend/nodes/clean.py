@@ -37,11 +37,6 @@ def clean_documents_node(state: TrendAnalysisState) -> TrendAnalysisState:
     """
     docs = clean_documents_from_dicts(state["raw_documents"])
 
-    print("===== docs type check =====")
-    print(type(docs))
-    print("element types:", set(type(x).__name__ for x in docs))
-
-
     filtered = filter_documents_by_topic(
         docs,
         state["topic"]

@@ -25,7 +25,6 @@ def generate_candidates_node(state: TrendAnalysisState) -> TrendAnalysisState:
     """
     topic 기반 candidate 생성 (핵심 수정)
     """
-    print("ENTER generate_candidates_node")
     update_status(
         state,
         TopicStatus.CLUSTERING, 
@@ -33,10 +32,6 @@ def generate_candidates_node(state: TrendAnalysisState) -> TrendAnalysisState:
     )
 
     cleaned_documents = state.get("cleaned_documents", [])
-
-    print("===== generate_candidates =====")
-    print(type(cleaned_documents))
-    print(set(type(x).__name__ for x in cleaned_documents))
 
     cleaned_documents = filter_documents_by_topic(
         cleaned_documents,
